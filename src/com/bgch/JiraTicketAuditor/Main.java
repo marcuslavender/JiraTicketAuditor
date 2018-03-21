@@ -1,4 +1,4 @@
-package com.bgch.JiraTicketLogger;
+package com.bgch.JiraTicketAuditor;
 
 
 

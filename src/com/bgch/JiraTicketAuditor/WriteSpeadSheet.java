@@ -1,4 +1,4 @@
-package com.bgch.JiraTicketLogger;
+package com.bgch.JiraTicketAuditor;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

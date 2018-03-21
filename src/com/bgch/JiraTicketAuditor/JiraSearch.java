@@ -1,4 +1,4 @@
-package com.bgch.JiraTicketLogger;
+package com.bgch.JiraTicketAuditor;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.SearchRestClient;

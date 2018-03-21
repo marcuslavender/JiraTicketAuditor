@@ -1,4 +1,4 @@
-package com.bgch.JiraTicketLogger;
+package com.bgch.JiraTicketAuditor;
 
 import java.io.*;
 import java.util.Scanner;

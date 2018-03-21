@@ -1,4 +1,4 @@
-package com.bgch.JiraTicketLogger;
+package com.bgch.JiraTicketAuditor;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
