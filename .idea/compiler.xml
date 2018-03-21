@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="JiraTicketAuditor" />
         <module name="JiraTicketLogger" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JiraTicketAuditor" target="1.7" />
       <module name="JiraTicketLogger" target="1.7" />
     </bytecodeTargetLevel>
   </component>

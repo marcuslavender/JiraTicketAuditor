@@ -168,7 +168,7 @@ import java.util.*;
 
             int count = 1;
             for (Object key : this.getQueries().keySet()) {
-                System.out.println(key + " : " + this.getQueries().get(key));
+                System.out.println(key);   // + this.getQueries().get(key)) - shows the JQL syntax
                 keys[count] = key.toString().substring(0,1);
                 count = count + 1;
             }
@@ -181,8 +181,6 @@ import java.util.*;
 
             while(!input.isEmpty()) {
                 String answer = null;
-                System.out.println(this.keys[1]);
-                System.out.println(this.keys[2]);
 
                 if (input.equals(keys[1])) {
                     answer = this.getQueries().get("1: Tickets with TSD, updated today").toString();

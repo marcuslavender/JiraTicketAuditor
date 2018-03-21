@@ -21,8 +21,8 @@
 
 
         <modelVersion>4.0.0</modelVersion>
-        <groupId>com.bgch.jiraTicketStats</groupId>
-        <artifactId>JiraTicketLogger</artifactId>
+        <groupId>com.bgch.jiraTicketAuditor</groupId>
+        <artifactId>JiraTicketAuditor</artifactId>
         <version>1.0-SNAPSHOT</version>
         <packaging>jar</packaging>
         <name>JIRA REST Java Client Example</name>
