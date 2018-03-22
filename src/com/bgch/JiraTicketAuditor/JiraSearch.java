@@ -93,10 +93,10 @@ import java.util.*;
 
 
         /**
-         * Method to set this.searchQuery variable
-         *
-         * @param handle - requires a Jira rest client object handle,  and JQL query string.
-         *  Method which initiates connection to Jira to perform the query and return the results as a Promise<SearchResult>
+         * Method to set this.searchQueryResults variable
+         * @param aSearchChoice - JQL query string.
+         * @param handle - requires a Jira rest client object handle, of type  JiraRestClient
+         *  Method which initiates connection to Jira to perform the query and return the results as a Promise object of type SearchResult
          *  object
          *
          */
@@ -122,7 +122,7 @@ import java.util.*;
         /**
          *
          * Method to return 'queries' hashmap
-         * This contains Query description as the key and JQL syntax query as the value
+         * @return this.queries - This contains Query description as the key and JQL syntax query as the value
          */
         protected Map getQueries()
         {
@@ -131,9 +131,7 @@ import java.util.*;
 
 
         /**
-         *
-         * Method to get the queries stored in searchChoice variable
-         *
+         * @return this.searchChoice - Method to return the queries stored in searchChoice variable
          */
         protected String getSearchChoice()
         {
@@ -172,49 +170,35 @@ import java.util.*;
                 keys[count] = key.toString().substring(0,1);
                 count = count + 1;
             }
-
             System.out.println("");
-            System.out.println("Enter a number : ");
-            Scanner s = new Scanner(System.in);
-            String input = s.nextLine();
 
 
-            while(!input.isEmpty()) {
+
+            boolean loop = false;
+            while(loop == false) {
                 String answer = null;
+                System.out.print("Enter a number : ");
+                Scanner s = new Scanner(System.in);
+                String input = s.nextLine();
 
                 if (input.equals(keys[1])) {
                     answer = this.getQueries().get("1: Tickets with TSD, updated today").toString();
                     this.setSearchChoice(answer);
-                    break;
+                    loop = true;
                 }
 
                 else if(input.equals(keys[2])) {
                      answer = this.getQueries().get("2: Tickets with BAU, updated today").toString();
                      this.setSearchChoice(answer);
-                     break;
+                     loop = true;
                     }
 
                  else {
-                    System.out.println("Invalid input");
-                    System.exit(0);
+                    System.out.println("Invalid input, try again");
+
                 }
             }
 
-
-            //loop until input is valid
-
-               // switch (input) {
-                 //   case 1:
-                   //     String answer = ;
-                     //   this.setSearchChoice(answer);
-                       // break;
-
-                    //default:
-                      //  System.out.println("Invalid input, please try again");
-                        //break;
-
-
-              //  }
 
             }
 
@@ -240,12 +224,11 @@ import java.util.*;
 
         /**
          *
-         * Ask user which fields to search for currently only navigable and default are available
-         * @return fieldToSearch - Navigable, All, done
+         * Ask user which fields to search for currently only navigable and default are available. These are added to a 'Set' called fields
+         * fieldToSearch - Navigable, All, done
          *
          */
-        private int fieldsToReturn()
-        {
+        protected void fieldsToReturn() {
 
             System.out.println();
             System.out.println("Choose fields to search for by entering corresponding number");
@@ -263,43 +246,28 @@ import java.util.*;
             }
             System.out.println();
             System.out.println();
-
-            Scanner s = new Scanner(System.in);
-            int answer = s.nextInt();
-            return answer;
-
-        }
+            System.out.print("Enter a number: ");
 
 
-        /**
-         *
-         * Loop to ask user which fields to search for
-         *  and adds the selection by sending message to addFieldsToSet
-         *  If user chooses 3 then it breaks the loop
-         *
-         */
-        protected void loopAskForFields()
-        {
-            System.out.println("Choose a field or  'done' to finish");
-            boolean loop = true;
+            boolean answer = false;
+            while (answer == false) {
+                Scanner s = new Scanner(System.in);
+                String input = s.next();
 
-            while(loop)
-            {
-                int answer;
-                answer = this.fieldsToReturn();
-               if(answer == 3)
-               {
-                   loop = false;
+                if (input.matches("1|2|3"))
+                {
+                    System.out.println("You chose option " + input);
+                    this.setFields(this.fieldToSearch[Integer.parseInt(input)]);
+                    answer = true;
+                    System.out.println("");
 
-               } else
-               {
-                   this.setFields(this.fieldToSearch[answer]);
-               }
-
+                }
+                else {
+                    System.out.println("Invalid option entered, try again");
+                    System.out.println("");
+                }
             }
-
         }
-
 
     }
 

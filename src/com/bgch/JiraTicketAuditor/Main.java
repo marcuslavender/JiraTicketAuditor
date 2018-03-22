@@ -7,10 +7,13 @@ import com.atlassian.jira.rest.client.api.domain.*;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -71,7 +74,7 @@ public class Main {
 
                     //Ask user for fields to search for: options - Navigable , All, done
                     //Typically only Navigable is needed.
-                    search.loopAskForFields();
+                    search.fieldsToReturn();
                     //Populates a hashmap with a list of queries that can be searched for.
                     search.setQueries();
                     // Give the user the options of queries that can be searched for
@@ -115,21 +118,26 @@ public class Main {
 
 
                     System.out.println("");
-                    System.out.println("Write results to file? : Enter y/n");
-                    Scanner s = new Scanner(System.in);
-                    String input = s.nextLine();
 
 
-                    while(input.isEmpty()) {
+                    boolean loop = false;
+                    while(loop == false) {
                         System.out.println("Write results to file? : Enter y/n");
+                        Scanner s = new Scanner(System.in);
+                        String input = s.nextLine();
 
 
                     if (input.matches("[Yy]es|YES")) {
                         System.out.println("Ok, now writing to file");
+                        System.out.println("");
+                        loop = true;
 
-                    } else {
+                    } else if(input.matches("[Nn]o|no")) {
                         System.out.println("Ok, Will now exit");
                         System.exit(0);
+                    }
+                    else {
+                        System.out.println("Invalid Option entered, try again");
                     }
                 }
 
@@ -143,7 +151,7 @@ public class Main {
                     //Builds Default Excel file path using username provided for Jira as this should match Mac username
 
                     String defaultPath = new StringBuilder(SpreadSheet.getDefaultExcelFileName()).insert(7, credentials.getUsername()).toString();
-                    System.out.println("Default Path is: " + defaultPath);
+                    System.out.println("Press 'return' for Default Path. Default Path is: " + defaultPath);
                     System.out.println("===================================================");
                     System.out.println("");
 
@@ -201,7 +209,10 @@ public class Main {
                         }
 
 
-                        writeToSpeadSheet.setSheetName(option.getDate() + " - " + writeToSpeadSheet.getSheetName());
+
+
+
+                            writeToSpeadSheet.setSheetName(option.getDate() + " - " + writeToSpeadSheet.getSheetName());
 
 
 
@@ -224,6 +235,7 @@ public class Main {
                             String status = issue.getStatus().getName();
                             DateTime date = issue.getUpdateDate().toDateTime();
                             System.out.println(issues + " " + ": " + summary + " - " + status );
+                            System.out.println("");
 
 
 
@@ -269,10 +281,29 @@ public class Main {
                             total.createCell(0).setCellValue("Total");
                             total.createCell(1).setCellValue(result.getTotal());
                             writeToSpeadSheet.checkFileExists();
-                            writeToSpeadSheet.createFileOutputStream();
-                            writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
-                            writeToSpeadSheet.getFileOutputStream().flush();
-                            writeToSpeadSheet.getFileOutputStream().close();
+                           // if(writeToSpeadSheet.checkFileExists().equals("new sheet"))
+                            //{
+                               // ReadSpreadSheet readSpreadSheet = new ReadSpreadSheet();
+                               // readSpreadSheet.setSheetName(writeToSpeadSheet.getSheetName());
+                               // readSpreadSheet.setExcelFilePath(writeToSpeadSheet.getExcelFilePath());
+                               // readSpreadSheet.createFileInputStream();
+                               // HSSFWorkbook wb = new HSSFWorkbook(readSpreadSheet.getFileInputStream());
+                               // HSSFSheet worksheet = wb.createSheet(readSpreadSheet.getSheetName());
+                               // wb.close();
+                               // writeToSpeadSheet.createSheet();
+                               // writeToSpeadSheet.createFileOutputStream();
+                                //writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
+                                //writeToSpeadSheet.getFileOutputStream().flush();
+                                //writeToSpeadSheet.getFileOutputStream().close();
+                           // }
+                            //else {
+
+
+                                writeToSpeadSheet.createFileOutputStream();
+                                writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
+                                writeToSpeadSheet.getFileOutputStream().flush();
+                                writeToSpeadSheet.getFileOutputStream().close();
+                            //}
 
                         } catch (IOException e) {
                             e.printStackTrace();

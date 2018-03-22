@@ -53,7 +53,8 @@ public class JiraAuthentication
 
     /**
      *
-     * Method to get createFromFactory variable
+     *
+     * @return this.createFromFactory - Method to return createFromFactory variable
      *
      */
     public JiraRestClientFactory getCreateFromFactory()
@@ -64,6 +65,7 @@ public class JiraAuthentication
     /**
      *
      * Method to set createFromFactory variable
+     * @param aFactory - JiraRestClientFactory type object
      *
      */
     protected void setCreateFromFactory(JiraRestClientFactory aFactory)
@@ -96,7 +98,8 @@ public class JiraAuthentication
     /**
      *
      * Method to create Jira Rest API Login Handle
-     * @param username,password
+     * @param username - Jira username
+     * @param password - Jira Password
      */
     protected void createJiraRestApiHandle(String username, String password)
     {

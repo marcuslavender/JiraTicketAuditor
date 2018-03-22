@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class ReadSpreadSheet extends  SpreadSheet
+public class ReadSpreadSheet extends SpreadSheet
 {
 
     private HSSFRow row;
@@ -19,7 +19,8 @@ public class ReadSpreadSheet extends  SpreadSheet
     public ReadSpreadSheet()
     {
         super();
-        this.createFileInputStream();
+
+
     }
 
     protected HSSFCell getCell()

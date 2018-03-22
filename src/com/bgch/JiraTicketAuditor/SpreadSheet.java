@@ -22,6 +22,7 @@ public abstract class SpreadSheet {
 
         this.sheetName = null;
         this.excelFilePath = null;
+
         SpreadSheet.defaultExcelFilePath = "/Users//Documents/ISTicketTally.xls";
     }
 
@@ -50,8 +51,8 @@ public abstract class SpreadSheet {
         return this.sheetName;
     }
 
-    protected void setExcelFilePath(String aUsername) {
-        this.excelFilePath = aUsername;
+    protected void setExcelFilePath(String aPathname) {
+        this.excelFilePath = aPathname;
     }
 
     protected void setSheetName(String aSheetName) {
@@ -87,29 +88,43 @@ public abstract class SpreadSheet {
 
 
     protected void checkFileExists() {
+        String action = null;
         File f = new File(this.getExcelFilePath());
         if (f.exists() && !f.isDirectory())
         {
-            System.out.println("File " + this.getExcelFilePath() + " Already exists do you wish to overwrite? y/n");
-            Scanner input = new Scanner(System.in);
-            while (input.nextLine().isEmpty())
+            System.out.println("File " + this.getExcelFilePath() + " Already exists do you wish to overwrite?");
+
+            boolean loop = true;
+            while (loop == true)
             {
-                System.out.println("Overwrite: y/n");
-                if (input.nextLine().matches("[Yy]es|YES"))
-                {
+                System.out.print("Overwrite: y/n ");
+                Scanner s = new Scanner(System.in);
+                String input = s.nextLine();
+
+
+                if (input.matches("[Yy]es|YES")) {
                     System.out.println("Ok, overwriting File");
                     f.delete();
-
+                    action = "Overwrite";
+                    loop = false;
                 }
-                else
-                {
-                    System.out.println("Ok, will now exit");
+                else if(input.matches("[Nn]o|NO")) {
+                    //System.out.println("Ok will save results to new sheet");
+                    System.out.println("Ok will now exit");
+                    System.out.println("");
+                    action = "new sheet";
+                    loop = false;
                     System.exit(0);
-
                 }
+                else {
+                    System.out.println("Invalid answer, try again");
+                }
+
+
+
             }
         }
-
+        //return action;
     }
 }
 
