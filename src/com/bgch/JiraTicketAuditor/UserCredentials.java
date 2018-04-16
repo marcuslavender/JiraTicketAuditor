@@ -37,7 +37,7 @@ import java.util.Scanner;
         {
             System.out.println("Enter Jira  username:");
             Scanner s = new Scanner(System.in);
-            this.username = s.next();
+            this.username = s.nextLine();
 
         }
 
@@ -62,7 +62,7 @@ import java.util.Scanner;
         {
             System.out.println("Enter Jira  password: ");
             Scanner s = new Scanner(System.in);
-            this.password = s.next();
+            this.password = s.nextLine();
         }
 
 
