@@ -193,6 +193,12 @@ import java.util.*;
                      loop = true;
                     }
 
+                else if(input.equals(keys[3])) {
+                    answer = this.getQueries().get("3: Tickets with status changed by TSD updated or created in the last week").toString();
+                    this.setSearchChoice(answer);
+                    loop = true;
+                }
+
                  else {
                     System.out.println("Invalid input, try again");
 
@@ -217,6 +223,7 @@ import java.util.*;
 
             this.queries.put("1: Tickets with TSD, updated today","project= \"IS Support\" AND status = \"With TSD\"  AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
             this.queries.put("2: Tickets with BAU, updated today", "project= \"IS Support\" AND status = \"With BAU\" AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
+            this.queries.put("3: Tickets with status changed by TSD updated or created in the last week", "project = \"IS Support\" AND status changed BY membersOf(\"TSD Team\") AND (created >= startOfWeek() OR updated >= startOfWeek())");
             //add subsequent queries here
         }
 

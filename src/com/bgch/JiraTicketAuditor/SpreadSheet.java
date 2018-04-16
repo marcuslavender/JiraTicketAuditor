@@ -87,16 +87,15 @@ public abstract class SpreadSheet {
     }
 
 
-    protected void checkFileExists() {
-        String action = null;
+    protected String checkFileExists() {
+        String actionToTake = null;
         File f = new File(this.getExcelFilePath());
         if (f.exists() && !f.isDirectory())
         {
             System.out.println("File " + this.getExcelFilePath() + " Already exists do you wish to overwrite?");
 
             boolean loop = true;
-            while (loop == true)
-            {
+            while (loop == true) {
                 System.out.print("Overwrite: y/n ");
                 Scanner s = new Scanner(System.in);
                 String input = s.nextLine();
@@ -104,27 +103,61 @@ public abstract class SpreadSheet {
 
                 if (input.matches("[Yy]es|YES")) {
                     System.out.println("Ok, overwriting File");
+                    System.out.println("");
                     f.delete();
-                    action = "Overwrite";
+                    actionToTake = "create new workbook";
                     loop = false;
-                }
-                else if(input.matches("[Nn]o|NO")) {
+                } else if (input.matches("[Nn]o|NO")) {
                     //System.out.println("Ok will save results to new sheet");
                     System.out.println("Ok will now exit");
                     System.out.println("");
-                    action = "new sheet";
+                    actionToTake = "new sheet";
                     loop = false;
-                    System.exit(0);
-                }
-                else {
+
+                } else {
                     System.out.println("Invalid answer, try again");
                 }
 
 
 
+
             }
         }
-        //return action;
+        else {
+            System.out.println("No file exists will create a new one");
+            actionToTake = "create new workbook";
+
+
+        }
+
+        return actionToTake;
+
+
+    }
+
+    /**
+     *
+     * Method which prompts user to enter name for the spreadsheet. Loops until it receives an input.
+     * Sheetname must be less than 18 charachters
+     */
+    public void EnterSheetName() {
+        boolean nameEntered = false;
+        while (nameEntered == false) {
+            System.out.println("");
+            System.out.println("Enter a sheet name for Excel workbook related to the query - 18 character limit!");
+            Scanner name = new Scanner(System.in);
+            String sheetName = name.nextLine();
+            if (sheetName.isEmpty()) {
+                System.out.println("");
+                System.out.println("No name entered!, enter a name related to the query");
+            } else if (sheetName.length() > 18) {
+                System.out.println("Sheet name is too long!");
+            } else {
+                this.setSheetName(sheetName);
+                nameEntered = true;
+            }
+
+        }
     }
 }
 

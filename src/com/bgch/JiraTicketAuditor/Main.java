@@ -9,14 +9,16 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.*;
 
+//import static org.apache.poi.ss.usermodel.WorkbookFactory.*;
 
 
 /**
@@ -41,90 +43,83 @@ public class Main {
         Options option = new Options();
 
 
+        //Ask user what option they would like to do
+        option.setOption();
+
+        switch (option.getOption()) {
+            case "search":
+
+                /**
+                 *
+                 * Create objects used to authenticate to Jira
+                 */
+                //Create JiraRestClient Authentication handler
+                JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
+
+                // Create Jira Authentication object
+                JiraAuthentication auth = new JiraAuthentication(Main.hostname);
+                auth.setCreateFromFactory(factory);
+
+                //Create Jira API handle
+                auth.createJiraRestApiHandle(credentials.getUsername(), credentials.getPassword());
 
 
-            //Ask user what option they would like to do
-            option.setOption();
+                /**
+                 *
+                 * Objects used to search Jira
+                 */
 
-            switch (option.getOption()) {
-                case "search":
+                //Create Jira Search object
+                JiraSearch search = new JiraSearch();
 
-                    /**
-                     *
-                     * Create objects used to authenticate to Jira
-                     */
-                    //Create JiraRestClient Authentication handler
-                    JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
-
-                    // Create Jira Authentication object
-                    JiraAuthentication auth = new JiraAuthentication(Main.hostname);
-                    auth.setCreateFromFactory(factory);
-
-                    //Create Jira API handle
-                    auth.createJiraRestApiHandle(credentials.getUsername(), credentials.getPassword());
+                //Ask user for fields to search for: options - Navigable , All, done
+                //Typically only Navigable is needed.
+                search.fieldsToReturn();
+                //Populates a hashmap with a list of queries that can be searched for.
+                search.setQueries();
+                // Give the user the options of queries that can be searched for
+                search.chooseSearchQuery();
+                // Searches Jira and returns results in 'searchQuery' variable
+                search.setSearchQueryResults(auth.getClient(), search.getSearchChoice());
 
 
-                    /**
-                     *
-                     * Objects used to search Jira
-                     */
+                /**
+                 *
+                 * Get individual tickets from the result of the search query
+                 *
+                 */
 
-                    //Create Jira Search object
-                    JiraSearch search = new JiraSearch();
-
-                    //Ask user for fields to search for: options - Navigable , All, done
-                    //Typically only Navigable is needed.
-                    search.fieldsToReturn();
-                    //Populates a hashmap with a list of queries that can be searched for.
-                    search.setQueries();
-                    // Give the user the options of queries that can be searched for
-                    search.chooseSearchQuery();
-                    // Searches Jira and returns results in 'searchQuery' variable
-                    search.setSearchQueryResults(auth.getClient(),search.getSearchChoice());
+                System.out.println();
+                System.out.println("");
+                System.out.println("=============================================");
+                System.out.println("Now extracting ticket info from search Result");
 
 
+                // Calls the search query and captures results
+                SearchResult result = search.getSearchQueryResults().claim();
+
+                Iterator<Issue> it = result.getIssues().iterator();
+                while (it.hasNext()) {
+                    String issues = it.next().getKey();
+                    System.out.println(issues);
+                }
 
 
+                /**
+                 *
+                 * Write the results to spreadsheet
+                 *
+                 */
 
 
-                    /**
-                     *
-                     * Get individual tickets from the result of the search query
-                     *
-                     */
-
-                    System.out.println();
-                    System.out.println("");
-                    System.out.println("=============================================");
-                    System.out.println("Now extracting ticket info from search Result");
+                System.out.println("");
 
 
-                    // Calls the search query and captures results
-                    SearchResult result = search.getSearchQueryResults().claim();
-
-                    Iterator<Issue> it = result.getIssues().iterator();
-                    while(it.hasNext())
-                    {
-                        String issues = it.next().getKey();
-                        System.out.println(issues);
-                    }
-
-
-                    /**
-                     *
-                     * Write the results to spreadsheet
-                     *
-                     */
-
-
-                    System.out.println("");
-
-
-                    boolean loop = false;
-                    while(loop == false) {
-                        System.out.println("Write results to file? : Enter y/n");
-                        Scanner s = new Scanner(System.in);
-                        String input = s.nextLine();
+                boolean loop = false;
+                while (loop == false) {
+                    System.out.println("Write results to file? : Enter y/n");
+                    Scanner s = new Scanner(System.in);
+                    String input = s.nextLine();
 
 
                     if (input.matches("[Yy]es|YES")) {
@@ -132,137 +127,99 @@ public class Main {
                         System.out.println("");
                         loop = true;
 
-                    } else if(input.matches("[Nn]o|no")) {
+                    } else if (input.matches("[Nn]o|no")) {
                         System.out.println("Ok, Will now exit");
                         System.exit(0);
-                    }
-                    else {
+                    } else {
                         System.out.println("Invalid Option entered, try again");
                     }
                 }
 
-                    // Ask user to enter a file path/name to write file to
-                    // if not specified then default directory /Users/<username>/Documents/ISTicketTally.xls will be used.
-                    System.out.println("Enter path to save file, e.g. /Users/<username>/Documents/ISTicketTally.xls");
+                // Ask user to enter a file path/name to write file to
+                // if not specified then default directory /Users/<username>/Documents/ISTicketTally.xls will be used.
+                System.out.println("Enter path to save file, e.g. /Users/<username>/Documents/ISTicketTally.xls");
 
-                    //Create spreadsheet object
-                    WriteSpeadSheet writeToSpeadSheet = new WriteSpeadSheet();
+                //Create spreadsheet object
+                WriteSpeadSheet writeToSpeadSheet = new WriteSpeadSheet();
 
-                    //Builds Default Excel file path using username provided for Jira as this should match Mac username
+                //Builds Default Excel file path using username provided for Jira as this should match Mac username
 
-                    String defaultPath = new StringBuilder(SpreadSheet.getDefaultExcelFileName()).insert(7, credentials.getUsername()).toString();
-                    System.out.println("Press 'return' for Default Path. Default Path is: " + defaultPath);
-                    System.out.println("===================================================");
-                    System.out.println("");
+                String defaultPath = new StringBuilder(SpreadSheet.getDefaultExcelFileName()).insert(7, credentials.getUsername()).toString();
+                System.out.println("Press 'return' for Default Path. Default Path is: " + defaultPath);
+                System.out.println("===================================================");
+                System.out.println("");
 
-                    //Checks if a Path is entered otherwise sets default path
-                    Scanner p = new Scanner(System.in);
-                    String path = p.nextLine();
-                    if(path.isEmpty())
-                    {
-                        writeToSpeadSheet.setExcelFilePath(defaultPath);
-
+                //Checks if a Path is entered otherwise sets default path
+                Scanner p = new Scanner(System.in);
+                String path = p.nextLine();
+                if (path.isEmpty()) {
+                    writeToSpeadSheet.setExcelFilePath(defaultPath);
 
 
-                    }
-                    else {
+                } else {
 
-                        writeToSpeadSheet.setExcelFilePath(path);
-                    }
-
+                    writeToSpeadSheet.setExcelFilePath(path);
+                }
 
 
-
-                    /**
-                     *
-                     *write to file
-                     *
-                     */
-
-                        // Set file path to write out spreadsheet.
-                        //writeToSpeadSheet.setExcelFilePath(FilePath);
-
-                        // Create workbook
-                        writeToSpeadSheet.createWorkBook();
-
-                        //Set Sheetname to today's date
-                        option.setDate();
-
-                       //Ask user for a name for the worksheet
-                        boolean nameEntered = false;
-                        while(nameEntered == false) {
-                            System.out.println("");
-                            System.out.println("Enter a sheet name for Excel workbook related to the query - 18 character limit!");
-                            Scanner name = new Scanner(System.in);
-                            String sheetName = name.nextLine();
-                            if(sheetName.isEmpty())
-                            {
-                                System.out.println("");
-                                System.out.println("No name entered!, enter a name related to the query");
-                            }
-                            else if (sheetName.length() > 18) {
-                                System.out.println("Sheet name is too long!");
-                            } else {
-                                writeToSpeadSheet.setSheetName(sheetName);
-                                nameEntered = true;
-                            }
-                        }
+                // Check if there is an existing excel file and if there is add a new worksheet to the workbook.
+                // Otherwise ask the user if they wish to Overwrite the existing workbook.
 
 
+                WriteSpeadSheet existingWorkbook = new WriteSpeadSheet();
+                existingWorkbook.setExcelFilePath(writeToSpeadSheet.getExcelFilePath());
+                if (existingWorkbook.checkFileExists().equals("new sheet")) {
+
+                    File file = new File(existingWorkbook.getExcelFilePath());
+                    try {
+                        existingWorkbook.setFileOutputStream(new FileOutputStream(file));
+
+                        if (file.exists()) {
+                            try {
+                                existingWorkbook.setHSSFWorkbook((HSSFWorkbook) org.apache.poi.ss.usermodel.WorkbookFactory.create(file));
+                                HSSFSheet sheet = existingWorkbook.getWorkbook().createSheet(option.getDate() + " - " + existingWorkbook.getSheetName());
+
+                                // Iterates over results and returns issue key
+                                ArrayList<String> keyArray = new ArrayList<>();
+                                ArrayList<String> summaryArray = new ArrayList<>();
+                                ArrayList<String> statusArray = new ArrayList<>();
+                                ArrayList<DateTime> timeArray = new ArrayList<>();
+
+                                Iterator<Issue> itr = result.getIssues().iterator();
+                                while (itr.hasNext()) {
+                                    int count = 0;
+                                    Issue issue = itr.next();
+                                    String issues = issue.getKey();
+                                    String summary = issue.getSummary();
+                                    String status = issue.getStatus().getName();
+                                    DateTime date = issue.getUpdateDate().toDateTime();
+                                    System.out.println(issues + " " + ": " + summary + " - " + status);
+                                    System.out.println("");
 
 
+                                    keyArray.add(count, issues);
+                                    summaryArray.add(count, summary);
+                                    statusArray.add(count, status);
+                                    timeArray.add(count, date);
+                                    count = count + 1;
+                                }
 
-                            writeToSpeadSheet.setSheetName(option.getDate() + " - " + writeToSpeadSheet.getSheetName());
-
-
-
-                        //Create sheet in workbook
-                        writeToSpeadSheet.createSheet(writeToSpeadSheet.getWorkbook());
-
-                        // Iterates over results and returns issue key
-                        ArrayList<String> keyArray = new ArrayList<>();
-                        ArrayList<String> summaryArray = new ArrayList<>();
-                        ArrayList<String> statusArray = new ArrayList<>();
-                        ArrayList<DateTime> timeArray = new ArrayList<>();
-
-                        Iterator<Issue> itr = result.getIssues().iterator();
-                        while(itr.hasNext())
-                        {
-                            int count = 0;
-                            Issue issue = itr.next();
-                            String issues = issue.getKey();
-                            String summary = issue.getSummary();
-                            String status = issue.getStatus().getName();
-                            DateTime date = issue.getUpdateDate().toDateTime();
-                            System.out.println(issues + " " + ": " + summary + " - " + status );
-                            System.out.println("");
+                                for (int i = 0; i < keyArray.size(); i++) {
+                                    HSSFRow header = existingWorkbook.getSheet().createRow(0);
+                                    header.createCell(0).setCellValue("Number");
+                                    header.createCell(1).setCellValue("Ticket ID");
+                                    header.createCell(2).setCellValue("Summary");
+                                    header.createCell(3).setCellValue("Status");
+                                    header.createCell(4).setCellValue("Date");
 
 
+                                    HSSFRow row = existingWorkbook.getSheet().createRow(i + 1);
 
-                            keyArray.add(count, issues);
-                            summaryArray.add(count, summary );
-                            statusArray.add(count, status);
-                            timeArray.add(count, date);
-                            count = count + 1;
-                        }
-
-                        for (int i = 0; i < keyArray.size(); i++) {
-                            HSSFRow header = writeToSpeadSheet.getSheet().createRow(0);
-                            header.createCell(0).setCellValue("Number");
-                            header.createCell(1).setCellValue("Ticket ID");
-                            header.createCell(2).setCellValue("Summary");
-                            header.createCell(3).setCellValue("Status");
-                            header.createCell(4).setCellValue("Date");
-
-
-
-                            HSSFRow row = writeToSpeadSheet.getSheet().createRow(i + 1);
-
-                            HSSFCell cell = row.createCell(0);
-                            HSSFCell cell2 = row.createCell(1);
-                            HSSFCell cell3 = row.createCell(2);
-                            HSSFCell cell4 = row.createCell(3);
-                            HSSFCell cell5 = row.createCell(4);
+                                    HSSFCell cell = row.createCell(0);
+                                    HSSFCell cell2 = row.createCell(1);
+                                    HSSFCell cell3 = row.createCell(2);
+                                    HSSFCell cell4 = row.createCell(3);
+                                    HSSFCell cell5 = row.createCell(4);
 
 
                                     cell.setCellValue(i);
@@ -276,38 +233,153 @@ public class Main {
                                     cell5.setCellValue(timeArray.get(i).toString(formatter));
                                 }
 
-                        try {
-                            HSSFRow total = writeToSpeadSheet.getSheet().createRow(keyArray.size() +2);
-                            total.createCell(0).setCellValue("Total");
-                            total.createCell(1).setCellValue(result.getTotal());
-                            writeToSpeadSheet.checkFileExists();
-                           // if(writeToSpeadSheet.checkFileExists().equals("new sheet"))
-                            //{
-                               // ReadSpreadSheet readSpreadSheet = new ReadSpreadSheet();
-                               // readSpreadSheet.setSheetName(writeToSpeadSheet.getSheetName());
-                               // readSpreadSheet.setExcelFilePath(writeToSpeadSheet.getExcelFilePath());
-                               // readSpreadSheet.createFileInputStream();
-                               // HSSFWorkbook wb = new HSSFWorkbook(readSpreadSheet.getFileInputStream());
-                               // HSSFSheet worksheet = wb.createSheet(readSpreadSheet.getSheetName());
-                               // wb.close();
-                               // writeToSpeadSheet.createSheet();
-                               // writeToSpeadSheet.createFileOutputStream();
-                                //writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
-                                //writeToSpeadSheet.getFileOutputStream().flush();
-                                //writeToSpeadSheet.getFileOutputStream().close();
-                           // }
-                            //else {
+                                try {
+                                    HSSFRow total = existingWorkbook.getSheet().createRow(keyArray.size() + 2);
+                                    total.createCell(0).setCellValue("Total");
+                                    total.createCell(1).setCellValue(result.getTotal());
+                                    writeToSpeadSheet.checkFileExists();
 
 
-                                writeToSpeadSheet.createFileOutputStream();
-                                writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
-                                writeToSpeadSheet.getFileOutputStream().flush();
-                                writeToSpeadSheet.getFileOutputStream().close();
-                            //}
+                                    writeToSpeadSheet.createFileOutputStream();
+                                    writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
+                                    writeToSpeadSheet.getFileOutputStream().flush();
+                                    writeToSpeadSheet.getFileOutputStream().close();
+                                    //}
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            } catch (Exception fileInput) {
+                                fileInput.getMessage();
+                            }
+
                         }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                } else
+                {
+
+                    /**
+                     *
+                     *Overwrite existing file / create new sheet
+                     *
+                     */
+
+                    // Set file path to write out spreadsheet.
+                    //writeToSpeadSheet.setExcelFilePath(FilePath);
+
+                    // Create workbook
+                    writeToSpeadSheet.createWorkBook();
+
+                    //Set Sheetname to today's date
+                    option.setDate();
+
+                    //Ask user for a name for the worksheet
+                    // Add method to add sheetname here
+
+                    writeToSpeadSheet.EnterSheetName();
+                    //boolean nameEntered = false;
+                    //while(nameEntered == false) {
+                    //  System.out.println("");
+                    //System.out.println("Enter a sheet name for Excel workbook related to the query - 18 character limit!");
+                    //Scanner name = new Scanner(System.in);
+                    //String sheetName = name.nextLine();
+                    //if(sheetName.isEmpty())
+                    //{
+                    //  System.out.println("");
+                    //System.out.println("No name entered!, enter a name related to the query");
+                    //}
+                    //else if (sheetName.length() > 18) {
+                    //  System.out.println("Sheet name is too long!");
+                    //} else {
+                    //  writeToSpeadSheet.setSheetName(sheetName);
+                    //nameEntered = true;
+
+
+                    writeToSpeadSheet.setSheetName(option.getDate() + " - " + writeToSpeadSheet.getSheetName());
+
+
+                    //Create sheet in workbook
+                    writeToSpeadSheet.createSheet(writeToSpeadSheet.getWorkbook());
+
+                    // Iterates over results and returns issue key
+                    ArrayList<String> keyArray = new ArrayList<>();
+                    ArrayList<String> summaryArray = new ArrayList<>();
+                    ArrayList<String> statusArray = new ArrayList<>();
+                    ArrayList<DateTime> timeArray = new ArrayList<>();
+
+                    Iterator<Issue> itr = result.getIssues().iterator();
+                    while (itr.hasNext()) {
+                        int count = 0;
+                        Issue issue = itr.next();
+                        String issues = issue.getKey();
+                        String summary = issue.getSummary();
+                        String status = issue.getStatus().getName();
+                        DateTime date = issue.getUpdateDate().toDateTime();
+                        System.out.println(issues + " " + ": " + summary + " - " + status);
+                        System.out.println("");
+
+
+                        keyArray.add(count, issues);
+                        summaryArray.add(count, summary);
+                        statusArray.add(count, status);
+                        timeArray.add(count, date);
+                        count = count + 1;
+                    }
+
+                    for (int i = 0; i < keyArray.size(); i++) {
+                        HSSFRow header = writeToSpeadSheet.getSheet().createRow(0);
+                        header.createCell(0).setCellValue("Number");
+                        header.createCell(1).setCellValue("Ticket ID");
+                        header.createCell(2).setCellValue("Summary");
+                        header.createCell(3).setCellValue("Status");
+                        header.createCell(4).setCellValue("Date");
+
+
+                        HSSFRow row = writeToSpeadSheet.getSheet().createRow(i + 1);
+
+                        HSSFCell cell = row.createCell(0);
+                        HSSFCell cell2 = row.createCell(1);
+                        HSSFCell cell3 = row.createCell(2);
+                        HSSFCell cell4 = row.createCell(3);
+                        HSSFCell cell5 = row.createCell(4);
+
+
+                        cell.setCellValue(i);
+                        cell2.setCellValue(keyArray.get(i));
+                        cell3.setCellValue(summaryArray.get(i));
+                        cell4.setCellValue(statusArray.get(i));
+
+                        // Create Date format object
+                        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy MMM dd");
+                        // Use format object to format Date and convert to string
+                        cell5.setCellValue(timeArray.get(i).toString(formatter));
+                    }
+
+                    try {
+                        HSSFRow total = writeToSpeadSheet.getSheet().createRow(keyArray.size() + 2);
+                        total.createCell(0).setCellValue("Total");
+                        total.createCell(1).setCellValue(result.getTotal());
+                        //writeToSpeadSheet.checkFileExists();
+
+                        writeToSpeadSheet.createFileOutputStream();
+                        writeToSpeadSheet.getWorkbook().write(writeToSpeadSheet.getFileOutputStream());
+                        writeToSpeadSheet.getFileOutputStream().flush();
+                        writeToSpeadSheet.getFileOutputStream().close();
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+
 
                         /**
                     //Read spreadsheet to get column total
