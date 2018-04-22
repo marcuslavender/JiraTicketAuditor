@@ -1,4 +1,7 @@
 package com.bgch.JiraTicketAuditor;
+import java.io.Console;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.Scanner;
 
     /**
@@ -35,9 +38,14 @@ import java.util.Scanner;
          */
         public void setUsername()
         {
-            System.out.println("Enter Jira  username:");
-            Scanner s = new Scanner(System.in);
-            this.username = s.nextLine();
+            String answer = "";
+            while(answer.isEmpty())
+            {
+                System.out.println("Enter Jira  username:");
+                Scanner s = new Scanner(System.in);
+                answer = s.nextLine();
+            }
+                this.username = answer;
 
         }
 
@@ -60,14 +68,38 @@ import java.util.Scanner;
          */
         public void setPassword()
         {
-            System.out.println("Enter Jira  password: ");
-            Scanner s = new Scanner(System.in);
-            this.password = s.nextLine();
+            /**
+
+
+            String pass = "";
+            Console cons = System.console();
+
+            while(pass.isEmpty())
+            {
+
+
+                System.out.println("Enter Jira  password: ");
+
+                try {
+                    char[] pwd = cons.readPassword();
+                    password = new String(pwd);
+                }
+                catch(IOError anException)
+                {
+                    System.out.println(anException.getMessage());
+                }
+            }
+
+            this.password = pass;
+
+            }
+             */
+            this.password = "Pccall1966!";
         }
 
-
-
     }
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.bgch.JiraTicketAuditor;
 
+
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.SearchRestClient;
 import com.atlassian.jira.rest.client.api.domain.SearchResult;
@@ -17,9 +18,12 @@ import java.util.*;
         private Promise<SearchResult> searchQueryResults;
         private Set<String> fields = new HashSet<>();
         private String[] fieldToSearch;
-        private Map<String,String> queries = new LinkedHashMap<String,String>();
+        private Map<String,String> queries;
         private String searchChoice;
         private String[] keys = new String[6];
+
+
+
 
 
 
@@ -32,6 +36,8 @@ import java.util.*;
             this.fieldToSearch = new String[4];
             this.searchQueryResults = null;
             this.searchChoice = null;
+            this.queries = new LinkedHashMap<>();
+
 
 
 
@@ -57,11 +63,12 @@ import java.util.*;
 
             this.fields.add(aField);
 
-            Iterator<String> itr = this.fields.iterator();
-            while(itr.hasNext())
-            {
-                System.out.println(itr.next());
-            }
+            //Iterator<String> itr = this.fields.iterator();
+            //while(itr.hasNext())
+
+           // {
+             //   System.out.println(itr.next());
+            //}
 
 
         }
@@ -113,16 +120,16 @@ import java.util.*;
          * @return this.keys - returns a 'keys' array which contains only the integer value of the key used for the
          * Jira query
          */
-        protected String[] getQueryKeys()
-        {
-            return this.keys;
-        }
+        //protected String[] getQueryKeys()
+       // {
+         //   return this.keys;
+        //}
 
 
         /**
          *
          * Method to return 'queries' hashmap
-         * @return this.queries - This contains Query description as the key and JQL syntax query as the value
+         * @return this.queries -
          */
         protected Map getQueries()
         {
@@ -137,6 +144,7 @@ import java.util.*;
         {
             return this.searchChoice;
         }
+
 
 
         /**
@@ -166,64 +174,83 @@ import java.util.*;
 
             int count = 1;
             for (Object key : this.getQueries().keySet()) {
-                System.out.println(key);   // + this.getQueries().get(key)) - shows the JQL syntax
+                System.out.println(key);
+                  // + this.getQueries().get(key)) - shows the JQL syntax
                 keys[count] = key.toString().substring(0,1);
                 count = count + 1;
             }
             System.out.println("");
 
 
+            String answer = "";
+            //boolean loop = true;
+            while (answer.isEmpty()) {
 
-            boolean loop = false;
-            while(loop == false) {
-                String answer = null;
+
                 System.out.print("Enter a number : ");
                 Scanner s = new Scanner(System.in);
                 String input = s.nextLine();
 
-                if (input.equals(keys[1])) {
-                    answer = this.getQueries().get("1: Tickets with TSD, updated today").toString();
-                    this.setSearchChoice(answer);
-                    loop = true;
-                }
 
-                else if(input.equals(keys[2])) {
-                     answer = this.getQueries().get("2: Tickets with BAU, updated today").toString();
-                     this.setSearchChoice(answer);
-                     loop = true;
+
+
+
+                    if (input.equals(keys[1])) {
+
+
+
+
+
+
+
+                        answer = this.getQueries().get("1: Tickets with TSD, updated today").toString();
+                        this.setSearchChoice(answer);
+                        //loop = false;
                     }
 
-                else if(input.equals(keys[3])) {
-                    answer = this.getQueries().get("3: Tickets with status changed by TSD updated or created in the last week").toString();
-                    this.setSearchChoice(answer);
-                    loop = true;
+
+
+                        else if(input.equals(keys[2])) {
+                        answer = this.getQueries().get("2: Tickets with BAU, updated today").toString();
+                        this.setSearchChoice(answer);
+                        //loop = false;
+
+                    }
+
+
+                        else if(input.equals(keys[3])) {
+                        answer = this.getQueries().get("3: Tickets with status changed by TSD updated or created in the last week").toString();
+                        this.setSearchChoice(answer);
+                        //loop = false;
+                    } else {
+                        System.out.println("Invalid input, try again");
+
+                    }
                 }
 
-                 else {
-                    System.out.println("Invalid input, try again");
 
-                }
             }
 
 
-            }
+
 
 
 
         /**
          *
-         * Method which populates the queries hashmap with the available Jira searches which are
+         * Method which populates the queries hashmap with the available Jira searches
          *
          */
         protected void setQueries()
         {
+
             //this.queries.put("0:", new String("previous"));
             //this.queries.put("1: Tickets updated today :", new String("project= \"IS Support\" AND status = \"With TSD\"  AND updatedDate >= startOfDay() ORDER BY createdDate DESC"));
             //this.queries.put("2:", new String("next"));
 
             this.queries.put("1: Tickets with TSD, updated today","project= \"IS Support\" AND status = \"With TSD\"  AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
-            this.queries.put("2: Tickets with BAU, updated today", "project= \"IS Support\" AND status = \"With BAU\" AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
-            this.queries.put("3: Tickets with status changed by TSD updated or created in the last week", "project = \"IS Support\" AND status changed BY membersOf(\"TSD Team\") AND (created >= startOfWeek() OR updated >= startOfWeek())");
+            this.queries.put("2: Tickets with BAU, updated today","project= \"IS Support\" AND status = \"With BAU\" AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
+            this.queries.put("3: Tickets with status changed by TSD updated or created in the last week","project = \"IS Support\" AND status changed BY membersOf(\"TSD Team\") AND (created >= startOfWeek() OR updated >= startOfWeek())");
             //add subsequent queries here
         }
 

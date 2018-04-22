@@ -26,7 +26,7 @@ import java.util.*;
  *
  */
 public class Main {
-    public static String hostname = "http://jira.bgchtest.info";
+
 
 
     public static void main(String[] args) {
@@ -57,7 +57,7 @@ public class Main {
                 JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
 
                 // Create Jira Authentication object
-                JiraAuthentication auth = new JiraAuthentication(Main.hostname);
+                JiraAuthentication auth = new JiraAuthentication(Options.hostname);
                 auth.setCreateFromFactory(factory);
 
                 //Create Jira API handle

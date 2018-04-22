@@ -106,9 +106,9 @@ public class JiraAuthentication
 
         URI uri = null;
         try {
-            uri = new URI(Main.hostname);
+            uri = new URI(Options.hostname);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
 
         this.setClient(this.getCreateFromFactory().createWithBasicHttpAuthentication(uri, username, password ));

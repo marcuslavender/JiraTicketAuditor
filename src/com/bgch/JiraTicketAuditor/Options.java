@@ -12,6 +12,7 @@ import java.util.Scanner;
         private String command;
         private boolean runAgain;
         private String todaysDate;
+        public static final String hostname = "http://jira.bgchtest.info";
 
 
         public Options()
