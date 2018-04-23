@@ -88,14 +88,14 @@ public abstract class SpreadSheet {
 
 
     protected String checkFileExists() {
-        String actionToTake = null;
+        String actionToTake = "";
         File f = new File(this.getExcelFilePath());
         if (f.exists() && !f.isDirectory())
         {
             System.out.println("File " + this.getExcelFilePath() + " Already exists do you wish to overwrite?");
 
-            boolean loop = true;
-            while (loop == true) {
+
+            while (actionToTake.isEmpty()) {
                 System.out.print("Overwrite: y/n ");
                 Scanner s = new Scanner(System.in);
                 String input = s.nextLine();
@@ -106,13 +106,13 @@ public abstract class SpreadSheet {
                     System.out.println("");
                     f.delete();
                     actionToTake = "create new workbook";
-                    loop = false;
+
                 } else if (input.matches("[Nn]o|NO")) {
                     //System.out.println("Ok will save results to new sheet");
                     System.out.println("Ok will now exit");
                     System.out.println("");
                     actionToTake = "new sheet";
-                    loop = false;
+
 
                 } else {
                     System.out.println("Invalid answer, try again");

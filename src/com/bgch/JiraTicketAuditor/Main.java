@@ -115,19 +115,19 @@ public class Main {
                 System.out.println("");
 
 
-                boolean loop = false;
-                while (loop == false) {
+                String answer = "";
+                while (answer.isEmpty()) {
                     System.out.println("Write results to file? : Enter y/n");
                     Scanner s = new Scanner(System.in);
                     String input = s.nextLine();
 
 
-                    if (input.matches("[Yy]es|YES")) {
+                    if (input.matches("[Yy]|[Yy]es|YES")) {
                         System.out.println("Ok, now writing to file");
                         System.out.println("");
-                        loop = true;
+                        answer = input;
 
-                    } else if (input.matches("[Nn]o|no")) {
+                    } else if (input.matches("[Nn]|[Nn]o|no")) {
                         System.out.println("Ok, Will now exit");
                         System.exit(0);
                     } else {

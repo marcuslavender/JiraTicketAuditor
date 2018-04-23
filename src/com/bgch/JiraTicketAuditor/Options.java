@@ -24,6 +24,7 @@ import java.util.Scanner;
         }
 
 
+
         /**
          * Method to get API request from user
          * @return this.command - Ask user what API request they would like to perform.
@@ -50,9 +51,23 @@ import java.util.Scanner;
                 System.out.print(i + ":");
                 System.out.println(APIOption[i]);
             }
+            String answer = "";
+            while(answer.isEmpty()) {
+                System.out.println("");
+                System.out.print("Enter an option:" + " ");
 
-            Scanner s = new Scanner(System.in);
-            this.command = APIOption[s.nextInt()];
+                try {
+                    Scanner s = new Scanner(System.in);
+                    if (Integer.parseInt(s.nextLine()) > APIOption.length) {
+                        System.out.println("Invalid option");
+                    } else {
+                        this.command = APIOption[s.nextInt()];
+                        answer = this.command;
+                    }
+                } catch (NumberFormatException anException) {
+                    anException.printStackTrace();
+                }
+            }
         }
 
         /**

@@ -280,19 +280,20 @@ import java.util.*;
             }
             System.out.println();
             System.out.println();
-            System.out.print("Enter a number: ");
 
 
-            boolean answer = false;
-            while (answer == false) {
+
+            String answer = "";
+            while (answer.isEmpty()) {
+                System.out.print("Enter a number: ");
                 Scanner s = new Scanner(System.in);
-                String input = s.next();
+                String input = s.nextLine();
 
                 if (input.matches("1|2|3"))
                 {
                     System.out.println("You chose option " + input);
                     this.setFields(this.fieldToSearch[Integer.parseInt(input)]);
-                    answer = true;
+                    answer = input;
                     System.out.println("");
 
                 }
