@@ -7,14 +7,12 @@ import java.util.Scanner;
     /**
      * Created by marcus.lavender on 11/02/2018.
      */
-    public class UserCredentials
-    {
+    public class UserCredentials {
 
         private String username;
         private String password;
 
-        UserCredentials()
-        {
+        UserCredentials() {
 
             username = null;
             password = null;
@@ -24,34 +22,32 @@ import java.util.Scanner;
 
         /**
          * Public method to get username
+         *
          * @return this.username
          */
-        public String getUsername()
-        {
+        public String getUsername() {
             return this.username;
         }
 
 
         /**
          * Public method to set username
-         *
          */
-        public void setUsername()
-        {
+        public void setUsername() {
             String answer = "";
-            while(answer.isEmpty())
-            {
+            while (answer.isEmpty()) {
                 System.out.println("Enter Jira  username:");
                 Scanner s = new Scanner(System.in);
                 answer = s.nextLine();
             }
-                this.username = answer;
+            this.username = answer;
 
         }
 
 
         /**
          * Public method to get password
+         *
          * @return this.password - users password
          */
         protected String getPassword()
@@ -61,21 +57,16 @@ import java.util.Scanner;
         }
 
 
-
         /**
          * Public method to set password
-         *
          */
-        public void setPassword()
-        {
+        public void setPassword() {
 
 
-            /**
             String pass = "";
             Console cons = System.console();
 
-            while(pass.isEmpty())
-            {
+            while (pass.isEmpty()) {
 
 
                 System.out.println("Enter Jira  password: ");
@@ -83,9 +74,7 @@ import java.util.Scanner;
                 try {
                     char[] pwd = cons.readPassword();
                     this.password = new String(pwd);
-                }
-                catch(IOError anException)
-                {
+                } catch (IOError anException) {
                     System.out.println(anException.getMessage());
                 }
 
@@ -93,9 +82,6 @@ import java.util.Scanner;
             }
 
 
-
-            }
-*/
             this.password = "Pccall1966!";
         }
     }
