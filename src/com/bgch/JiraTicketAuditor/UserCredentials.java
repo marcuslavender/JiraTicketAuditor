@@ -82,7 +82,6 @@ import java.util.Scanner;
             }
 
 
-            this.password = "Pccall1966!";
         }
     }
 
