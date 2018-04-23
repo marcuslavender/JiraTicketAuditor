@@ -68,7 +68,7 @@ import java.util.Scanner;
          */
         public void setPassword()
         {
-            /**
+
 
 
             String pass = "";
@@ -93,11 +93,12 @@ import java.util.Scanner;
             this.password = pass;
 
             }
-             */
-            this.password = "Pccall1966!";
+
+            //this.password = "Pccall1966!";
         }
 
-    }
+
+
 
 
 
