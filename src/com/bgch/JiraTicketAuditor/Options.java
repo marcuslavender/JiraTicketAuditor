@@ -1,6 +1,8 @@
 package com.bgch.JiraTicketAuditor;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
     /**
@@ -42,15 +44,27 @@ import java.util.Scanner;
             System.out.println("Choose corresponding number for API request");
             System.out.println("===========================================");
 
-            String[] APIOption = new String[4];
-            APIOption[1] = "search";
-            APIOption[2] = "create - Not yet working";
-            APIOption[3] = "delete - Not yet working";
+            List<String> options = new ArrayList<>();
+            options.add("Search");
+            options.add("Create - not yet working!");
+            options.add("delete - not yet working!");
 
-            for (int i = 1; i < APIOption.length; i++) {
-                System.out.print(i + ":");
-                System.out.println(APIOption[i]);
+            int count = 1;
+            for(String element : options)
+            {
+                System.out.println(count + ":" + element.toString());
+                count += 1;
             }
+
+            //String[] APIOption = new String[4];
+            //APIOption[1] = "search";
+            //APIOption[2] = "create - Not yet working";
+            //APIOption[3] = "delete - Not yet working";
+
+            //for (int i = 1; i < APIOption.length; i++) {
+              //  System.out.print(i + ":");
+                //System.out.println(APIOption[i]);
+            //}
             String answer = "";
             while(answer.isEmpty()) {
                 System.out.println("");
@@ -58,10 +72,11 @@ import java.util.Scanner;
 
                 try {
                     Scanner s = new Scanner(System.in);
-                    if (Integer.parseInt(s.nextLine()) > APIOption.length) {
+                    String input = s.nextLine();
+                    if (Integer.parseInt(input) > (count - 1)) {
                         System.out.println("Invalid option");
                     } else {
-                        this.command = APIOption[s.nextInt()];
+                        this.command = options.get(Integer.parseInt(input) - 1);
                         answer = this.command;
                     }
                 } catch (NumberFormatException anException) {

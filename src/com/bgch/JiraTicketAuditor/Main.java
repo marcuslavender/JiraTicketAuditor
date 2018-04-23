@@ -47,7 +47,7 @@ public class Main {
         option.setOption();
 
         switch (option.getOption()) {
-            case "search":
+            case "Search":
 
                 /**
                  *

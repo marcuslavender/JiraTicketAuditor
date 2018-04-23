@@ -70,7 +70,7 @@ import java.util.Scanner;
         {
 
 
-
+            /**
             String pass = "";
             Console cons = System.console();
 
@@ -82,20 +82,23 @@ import java.util.Scanner;
 
                 try {
                     char[] pwd = cons.readPassword();
-                    password = new String(pwd);
+                    this.password = new String(pwd);
                 }
                 catch(IOError anException)
                 {
                     System.out.println(anException.getMessage());
                 }
+
+                pass = this.password;
             }
 
-            this.password = pass;
+
 
             }
-
-            //this.password = "Pccall1966!";
+*/
+            this.password = "Pccall1966!";
         }
+    }
 
 
 
