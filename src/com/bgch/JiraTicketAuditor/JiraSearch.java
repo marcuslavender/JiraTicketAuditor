@@ -33,7 +33,7 @@ import java.util.*;
         public JiraSearch()
 
         {
-            this.fieldToSearch = new String[4];
+            this.fieldToSearch = new String[3];
             this.searchQueryResults = null;
             this.searchChoice = null;
             this.queries = new LinkedHashMap<>();
