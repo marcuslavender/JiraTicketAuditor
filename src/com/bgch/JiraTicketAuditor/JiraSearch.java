@@ -63,12 +63,7 @@ import java.util.*;
 
             this.fields.add(aField);
 
-            //Iterator<String> itr = this.fields.iterator();
-            //while(itr.hasNext())
 
-           // {
-             //   System.out.println(itr.next());
-            //}
 
 
         }
@@ -114,16 +109,7 @@ import java.util.*;
 
         }
 
-        /**
-         *
-         * Method to get Query keys array
-         * @return this.keys - returns a 'keys' array which contains only the integer value of the key used for the
-         * Jira query
-         */
-        //protected String[] getQueryKeys()
-       // {
-         //   return this.keys;
-        //}
+
 
 
         /**
@@ -244,9 +230,7 @@ import java.util.*;
         protected void setQueries()
         {
 
-            //this.queries.put("0:", new String("previous"));
-            //this.queries.put("1: Tickets updated today :", new String("project= \"IS Support\" AND status = \"With TSD\"  AND updatedDate >= startOfDay() ORDER BY createdDate DESC"));
-            //this.queries.put("2:", new String("next"));
+
 
             this.queries.put("1: Tickets with TSD, updated today","project= \"IS Support\" AND status = \"With TSD\"  AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
             this.queries.put("2: Tickets with BAU, updated today","project= \"IS Support\" AND status = \"With BAU\" AND updatedDate >= startOfDay() ORDER BY createdDate DESC");
@@ -271,7 +255,7 @@ import java.util.*;
 
             this.fieldToSearch[1] = " *navigable";
             this.fieldToSearch[2] = " *all";
-            this.fieldToSearch[3] = " done";
+            //this.fieldToSearch[3] = " done";
 
             for (int i = 1; i < fieldToSearch.length; i++) {
                 System.out.println(i + ": " + this.fieldToSearch[i]);
@@ -289,7 +273,7 @@ import java.util.*;
                 Scanner s = new Scanner(System.in);
                 String input = s.nextLine();
 
-                if (input.matches("1|2|3"))
+                if (input.matches("1|2"))
                 {
                     System.out.println("You chose option " + input);
                     this.setFields(this.fieldToSearch[Integer.parseInt(input)]);

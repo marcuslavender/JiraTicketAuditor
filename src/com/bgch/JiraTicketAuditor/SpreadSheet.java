@@ -101,13 +101,13 @@ public abstract class SpreadSheet {
                 String input = s.nextLine();
 
 
-                if (input.matches("[Yy]es|YES")) {
+                if (input.matches("[Yy]|[Yy]es|YES")) {
                     System.out.println("Ok, overwriting File");
                     System.out.println("");
                     f.delete();
                     actionToTake = "create new workbook";
 
-                } else if (input.matches("[Nn]o|NO")) {
+                } else if (input.matches("[Nn]|[Nn]o|no")) {
                     //System.out.println("Ok will save results to new sheet");
                     System.out.println("Ok will now exit");
                     System.out.println("");

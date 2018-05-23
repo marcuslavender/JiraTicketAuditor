@@ -46,8 +46,8 @@ import java.util.Scanner;
 
             List<String> options = new ArrayList<>();
             options.add("Search");
-            options.add("Create - not yet working!");
-            options.add("delete - not yet working!");
+            //options.add("Create - not yet working!");
+            //options.add("delete - not yet working!");
 
             int count = 1;
             for(String element : options)
@@ -56,15 +56,7 @@ import java.util.Scanner;
                 count += 1;
             }
 
-            //String[] APIOption = new String[4];
-            //APIOption[1] = "search";
-            //APIOption[2] = "create - Not yet working";
-            //APIOption[3] = "delete - Not yet working";
 
-            //for (int i = 1; i < APIOption.length; i++) {
-              //  System.out.print(i + ":");
-                //System.out.println(APIOption[i]);
-            //}
             String answer = "";
             while(answer.isEmpty()) {
                 System.out.println("");

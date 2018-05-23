@@ -184,6 +184,10 @@ public class Main {
                                 ArrayList<String> summaryArray = new ArrayList<>();
                                 ArrayList<String> statusArray = new ArrayList<>();
                                 ArrayList<DateTime> timeArray = new ArrayList<>();
+                                ArrayList<String> typeArray = new ArrayList<>();
+                                ArrayList<String> priorityArray = new ArrayList<>();
+                                ArrayList<DateTime> createdDateArray = new ArrayList<>();
+
 
                                 Iterator<Issue> itr = result.getIssues().iterator();
                                 while (itr.hasNext()) {
@@ -192,7 +196,14 @@ public class Main {
                                     String issues = issue.getKey();
                                     String summary = issue.getSummary();
                                     String status = issue.getStatus().getName();
-                                    DateTime date = issue.getUpdateDate().toDateTime();
+                                    String issueType = issue.getIssueType().getName();
+                                    String priority = issue.getPriority().getName();
+                                    DateTime createdDate = issue.getCreationDate().toDateTime();
+                                    DateTime updatedDate = issue.getUpdateDate().toDateTime();
+
+
+
+
                                     System.out.println(issues + " " + ": " + summary + " - " + status);
                                     System.out.println("");
 
@@ -200,7 +211,11 @@ public class Main {
                                     keyArray.add(count, issues);
                                     summaryArray.add(count, summary);
                                     statusArray.add(count, status);
-                                    timeArray.add(count, date);
+                                    timeArray.add(count, updatedDate);
+                                    typeArray.add(count,issueType);
+                                    priorityArray.add(count,priority);
+                                    createdDateArray.add(count,createdDate);
+
                                     count = count + 1;
                                 }
 
@@ -210,7 +225,10 @@ public class Main {
                                     header.createCell(1).setCellValue("Ticket ID");
                                     header.createCell(2).setCellValue("Summary");
                                     header.createCell(3).setCellValue("Status");
-                                    header.createCell(4).setCellValue("Date");
+                                    header.createCell(4).setCellValue("Updated Date");
+                                    header.createCell(5).setCellValue("Created Date");
+                                    header.createCell(6).setCellValue("Priority");
+                                    header.createCell(7).setCellValue("Issue Type");
 
 
                                     HSSFRow row = existingWorkbook.getSheet().createRow(i + 1);
@@ -220,6 +238,9 @@ public class Main {
                                     HSSFCell cell3 = row.createCell(2);
                                     HSSFCell cell4 = row.createCell(3);
                                     HSSFCell cell5 = row.createCell(4);
+                                    HSSFCell cell6 = row.createCell(5);
+                                    HSSFCell cell7 = row.createCell(6);
+                                    HSSFCell cell8 = row.createCell(7);
 
 
                                     cell.setCellValue(i);
@@ -231,6 +252,9 @@ public class Main {
                                     DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy MMM dd");
                                     // Use format object to format Date and convert to string
                                     cell5.setCellValue(timeArray.get(i).toString(formatter));
+                                    cell6.setCellValue(createdDateArray.get(i).toString(formatter));
+                                    cell7.setCellValue(priorityArray.get(i));
+                                    cell8.setCellValue(typeArray.get(i));
                                 }
 
                                 try {
@@ -269,8 +293,7 @@ public class Main {
                      *
                      */
 
-                    // Set file path to write out spreadsheet.
-                    //writeToSpeadSheet.setExcelFilePath(FilePath);
+
 
                     // Create workbook
                     writeToSpeadSheet.createWorkBook();
@@ -279,25 +302,10 @@ public class Main {
                     option.setDate();
 
                     //Ask user for a name for the worksheet
-                    // Add method to add sheetname here
+
 
                     writeToSpeadSheet.EnterSheetName();
-                    //boolean nameEntered = false;
-                    //while(nameEntered == false) {
-                    //  System.out.println("");
-                    //System.out.println("Enter a sheet name for Excel workbook related to the query - 18 character limit!");
-                    //Scanner name = new Scanner(System.in);
-                    //String sheetName = name.nextLine();
-                    //if(sheetName.isEmpty())
-                    //{
-                    //  System.out.println("");
-                    //System.out.println("No name entered!, enter a name related to the query");
-                    //}
-                    //else if (sheetName.length() > 18) {
-                    //  System.out.println("Sheet name is too long!");
-                    //} else {
-                    //  writeToSpeadSheet.setSheetName(sheetName);
-                    //nameEntered = true;
+
 
 
                     writeToSpeadSheet.setSheetName(option.getDate() + " - " + writeToSpeadSheet.getSheetName());
@@ -311,6 +319,10 @@ public class Main {
                     ArrayList<String> summaryArray = new ArrayList<>();
                     ArrayList<String> statusArray = new ArrayList<>();
                     ArrayList<DateTime> timeArray = new ArrayList<>();
+                    ArrayList<String> typeArray = new ArrayList<>();
+                    ArrayList<String> priorityArray = new ArrayList<>();
+                    ArrayList<DateTime> createdDateArray = new ArrayList<>();
+
 
                     Iterator<Issue> itr = result.getIssues().iterator();
                     while (itr.hasNext()) {
@@ -320,6 +332,9 @@ public class Main {
                         String summary = issue.getSummary();
                         String status = issue.getStatus().getName();
                         DateTime date = issue.getUpdateDate().toDateTime();
+                        String issueType = issue.getIssueType().getName();
+                        String priority = issue.getPriority().getName();
+                        DateTime createdDate = issue.getCreationDate().toDateTime();
                         System.out.println(issues + " " + ": " + summary + " - " + status);
                         System.out.println("");
 
@@ -328,6 +343,9 @@ public class Main {
                         summaryArray.add(count, summary);
                         statusArray.add(count, status);
                         timeArray.add(count, date);
+                        typeArray.add(count,issueType);
+                        priorityArray.add(count,priority);
+                        createdDateArray.add(count,createdDate);
                         count = count + 1;
                     }
 
@@ -337,7 +355,10 @@ public class Main {
                         header.createCell(1).setCellValue("Ticket ID");
                         header.createCell(2).setCellValue("Summary");
                         header.createCell(3).setCellValue("Status");
-                        header.createCell(4).setCellValue("Date");
+                        header.createCell(4).setCellValue("Updated Date");
+                        header.createCell(5).setCellValue("Created Date");
+                        header.createCell(6).setCellValue("Priority");
+                        header.createCell(7).setCellValue("Issue Type");
 
 
                         HSSFRow row = writeToSpeadSheet.getSheet().createRow(i + 1);
@@ -347,6 +368,9 @@ public class Main {
                         HSSFCell cell3 = row.createCell(2);
                         HSSFCell cell4 = row.createCell(3);
                         HSSFCell cell5 = row.createCell(4);
+                        HSSFCell cell6 = row.createCell(5);
+                        HSSFCell cell7 = row.createCell(6);
+                        HSSFCell cell8 = row.createCell(7);
 
 
                         cell.setCellValue(i);
@@ -358,6 +382,9 @@ public class Main {
                         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy MMM dd");
                         // Use format object to format Date and convert to string
                         cell5.setCellValue(timeArray.get(i).toString(formatter));
+                        cell6.setCellValue(createdDateArray.get(i).toString(formatter));
+                        cell7.setCellValue(priorityArray.get(i));
+                        cell8.setCellValue(typeArray.get(i));
                     }
 
                     try {
